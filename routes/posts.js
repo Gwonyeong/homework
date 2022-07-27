@@ -9,17 +9,19 @@ const router = express.Router()
 // (검색 기능이 아닙니다. 간단한 게시글 조회만 구현해주세요.)
 // GET: title, nickname, date, desc
 
-router.get('/post/:id', async(req, res) => {//게시글 조회 
-    const {id} =req.params;
-    
-    
-    
+router.get('/post/:id', async(req, res, next) => {//게시글 조회 
+    try{const {id} =req.params;
     const post = await Post.find({_id:id});
 
     if(!post.length){//포스트가 없는 경우
         return res.status(400).json({success : false, errorMessage : "없는 게시물 입니다."})
     }
-    res.json({success: true, post : post});
+    res.json({success: true, post : post});}
+    catch(err){
+        //err콘솔로 확인
+        //
+        next(err) //app.js
+    }
 
 })
 
