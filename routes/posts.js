@@ -11,10 +11,10 @@ const router = express.Router()
 
 router.get('/post/:id', async(req, res) => {//게시글 조회 
     const {id} =req.params;
-    console.log(id)
     
     
-    const post = await Post.find({id:id});
+    
+    const post = await Post.find({_id:id});
 
     if(!post.length){//포스트가 없는 경우
         return res.status(400).json({success : false, errorMessage : "없는 게시물 입니다."})
@@ -29,7 +29,7 @@ router.get('/post/:id', async(req, res) => {//게시글 조회
 
 router.post('/post', async(req, res) => {//게시글 작성
    
-    const {id,title,nickname, pw, desc} = req.body;// title, nickname, pw, desc
+    const {title,nickname, pw, desc} = req.body;// title, nickname, pw, desc
     const dup_nickname = await Post.find({ nickname }); //닉네임과 글 제목이 같으면 중복
 
     for(let i =0; i < dup_nickname.length; i++){
@@ -38,7 +38,7 @@ router.post('/post', async(req, res) => {//게시글 작성
 
         }
     }
-    await Post.create({id, title,nickname, pw, desc});
+    await Post.create({ title,nickname, pw, desc});
     res.json({success : true});
     
 })
@@ -46,19 +46,20 @@ router.post('/post', async(req, res) => {//게시글 작성
 // 4. 게시글 수정 API '/post'
 // - API를 호출할 때 입력된 비밀번호를 비교하여 동일할 때만 글이 수정되게 하기
 // PUT: pw
-router.put('/post', async(req, res)=>{//게시글 수정
-    const id = req.query.id;
-    const pw = req.query.pw;
-    const id_ = await Post.find({id :Number(id)})//게시물의 아이디로 게시물 찾기
-    
-    if(!id_.length){
+router.put('/post/:id', async(req, res)=>{//게시글 수정
+    const {id} = req.params;
+    const content = req.body["content"]
+    const pw = req.body["password"]
+    const post = await Post.find({_id :id})//게시물의 아이디로 게시물 찾기
+    console.log(content, pw)
+    if(!content.length){
         return res.status(400).json({ success: false, errorMessage: "없는 게시물입니다."})
     }
-    if(pw !== id_[0]["pw"]){
+    if(pw !== post[0]["pw"]){
         return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다."})
 
     }
-    
+    await Post.updateOne({_id: id}, {$set: {desc : content}})
     res.json({success: true, message: "게시물 변경 성공!"})
    
 
@@ -67,20 +68,11 @@ router.put('/post', async(req, res)=>{//게시글 수정
 // 5. 게시글 삭제 API '/post'
 // - API를 호출할 때 입력된 비밀번호를 비교하여 동일할 때만 글이 삭제되게 하기
 // DELETE: pw
-router.delete('/post', async(req, res)=> {//게시글 삭제
-    const id = req.query.id;
-    const pw = req.query.pw;
-    
-    const id_ = await Post.find({id : Number(id)})
+router.delete('/post/:id', async(req, res)=> {//게시글 삭제
+    const {id} = req.params;
    
-    if(!id_.length){
-        return res.status(400).json({ success: false, errorMessage: "없는 게시물입니다."})
-    }
-    if(pw !== id_[0]["pw"]){
-        return res.status(400).json({ success: false, errorMessage: "비밀번호가 틀렸습니다."})
-    }
-
-    await Post.deleteOne({id : Number(id)})
+       
+    await Post.deleteOne({_id: id})
     res.json({success: true, message: "게시물 삭제 성공!"})
 })
 

@@ -1,5 +1,6 @@
 const express = require('express')
 const Comment = require('../schemas/comment')
+
 //모델이름 대문자로
 const router = express.Router()
 
@@ -10,7 +11,7 @@ const router = express.Router()
 router.get('/comment/:post_id', async(req, res)=>{ //댓글 목록 조회
     const {post_id} = req.params
     
-    const comments = await Comment.find({post_id : Number(post_id)})//
+    const comments = await Comment.find({post_id : post_id})//
    
     comments.sort((a,b) => {
         
@@ -36,9 +37,9 @@ router.get('/comment/:post_id', async(req, res)=>{ //댓글 목록 조회
 //     - 댓글 내용을 비워둔 채 댓글 작성 API를 호출하면 "댓글 내용을 입력해주세요" 라는 메세지를 return하기
 //     - 댓글 내용을 입력하고 댓글 작성 API를 호출한 경우 작성한 댓글을 추가하기
 //      POST: comment, date, nickname
-router.post('/comment', async(req, res)=>{ //댓글 작성
-    
-    const {post_id, comment, nickname } = req.body;
+router.post('/comment/:post_id', async(req, res)=>{ //댓글 작성
+    const {post_id} = req.params
+    const{ comment, nickname } = req.body;
     //댓글의 게시물의 아이디, 댓글의 내용, 닉네임, 작성 날짜
 
     if(!comment.length){
@@ -53,17 +54,19 @@ router.post('/comment', async(req, res)=>{ //댓글 작성
 //     - 댓글 내용을 비워둔 채 댓글 수정 API를 호출하면 "댓글 내용을 입력해주세요" 라는 메세지를 return하기
 //     - 댓글 내용을 입력하고 댓글 수정 API를 호출한 경우 작성한 댓글을 수정하기
 //      PUT: comment
-router.put('/comment', async(req, res)=>{ // 댓글 수정
-    const id = req.query.id;
-    const {comment} = req.query.comment;
-   
+router.put('/comment/:comment_id', async(req, res)=>{ // 댓글 수정
+    const {comment_id} = req.params
+    const b = req.body;
+    
+    
   //코맨트를 비워둔 채 수정을 하려하면 오류발생
-    if(!comment.length){
+    if(!b["comment"].length){
         return res.status(400).json({success : false, message : "댓글 내용을 입력해주세요"})
     }
     
+    
     //코맨트 수정기능
-    await Comment.updateOne({ post_id : Number(id)}, {$set : {comment}})
+    await Comment.updateOne({ _id : comment_id}, {$set : {comment :b["comment"]}})
     res.json({success : true, message : "댓글 수정 완료!"})
 
 })
@@ -71,10 +74,10 @@ router.put('/comment', async(req, res)=>{ // 댓글 수정
 // 9. 댓글 삭제 /comment
 //     - 원하는 댓글을 삭제하기
 // DELETE: comment
-router.delete('/comment', async(req, res)=>{ // 댓글 삭제
-    const id = req.query.id;
+router.delete('/comment/:comment_id', async(req, res)=>{ // 댓글 삭제
+    const {id} = req.params;
     
-    await Comment.deleteOne({post_id : Number(id)})
+    await Comment.deleteOne({_id : id})
         
     res.json({success : true, message : "댓글 삭제 완료!"})
 })

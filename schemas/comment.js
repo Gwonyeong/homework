@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
 
 // 6. 댓글 목록 조회 /comment
 //     - 조회하는 게시글에 작성된 모든 댓글을 목록 형식으로 볼 수 있도록 하기
@@ -28,26 +30,13 @@ const mongoose = require("mongoose");
 // });
 
 const schema = new mongoose.Schema({
-    post_id: {
-        type : Number,
-        required : true,
-        
-    },
+    post_id: {type : String, required : true, },
 
-    comment: {
-        type : String, 
-        required : true,
-    },
-    nickname: {
-        type: String,
-        required : true,
-    },
-    date : {
-        type : Date,
-        required : true,
-        
-        default : Date.now,
-    },
+    comment: { type : String,  required : true, },
+
+    nickname: { type: String, required : true, },
+
+    date : { type : Date, required : true, default : Date.now, },
     
     //댓글 내용과 포스트 내용을 분리 시켜서 
     //코맨트에서 포스트를 가져올 수 있게 1:다 관계이니까
@@ -56,4 +45,4 @@ const schema = new mongoose.Schema({
 })
 // schema.virtual~~~~ _id값을 가져올 수 있다.
 // 
-module.exports = mongoose.model('comment', schema)
+module.exports = mongoose.model('Comment', schema)

@@ -20,38 +20,16 @@ const mongoose = require('mongoose')
 // DELETE: pw
 
 const schema = new mongoose.Schema({
-   
-    
-    
-    id: {
-        type: Number,
-        required : true,
-        unique: true
-    },
-    title: {
-        type : String,
-        required : true,
+    title: { type : String, required : true, },
+
+    nickname: { type : String, required : true, },
+
+    desc : { type: String, require : true},
+
+    date : { type : Date, default : Date.now},
+
+    pw : { type: String, required : true },
         
-    },
-    nickname: {
-        type : String,
-        required : true,
-    },
-    desc : {
-        type: String,
-        
-    },
-    date : {
-        type : Date,
-        default : Date.now
-        
-    },
-    pw : {
-        type: String,
-        required : true
-    },
-    
-    
         //모델명
         //1대 다관계 :
         //게시물의 언더바 아이디를 넣어줘야함.
