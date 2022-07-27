@@ -11,8 +11,18 @@ const postDB = require("../schemas/posts.js")
 //메인페이지
 router.get('/', async(req, res) => { //전체 게시글 목록 조회
     const content = await postDB.find();
-    
-    res.json({success : true, content : content})
-    
+    comments.sort((a,b) => {
+        
+        if(a["createAt"] > b["createAt"]) return a-b
+    })
+    res.json({success: true, content : content.map(p => ({
+        title : p.title,
+        nickname: p.nickname,
+        desc : p.desc,
+        date : p.date
+
+    }
+    ))
+})
 })
 module.exports = router

@@ -15,7 +15,7 @@ router.get('/comment/:post_id', async(req, res)=>{ //댓글 목록 조회
    
     comments.sort((a,b) => {
         
-        if(a["date"] > b["date"]) return a-b
+        if(a["createAt"] > b["createAt"]) return a-b
     })
     // populate
     // User.findOne({ name: 'zero' }).populate('bestFriend').exec((err, data) => {

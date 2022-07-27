@@ -12,11 +12,23 @@ const router = express.Router()
 router.get('/post/:id', async(req, res, next) => {//게시글 조회 
     try{const {id} =req.params;
     const post = await Post.find({_id:id});
+    
 
+    
     if(!post.length){//포스트가 없는 경우
         return res.status(400).json({success : false, errorMessage : "없는 게시물 입니다."})
     }
-    res.json({success: true, post : post});}
+    res.json({success: true, post : post.map(p => ({
+        title : p.title,
+        nickname: p.nickname,
+        desc : p.desc,
+        date : p.date
+
+    }
+    ))
+}
+    );
+}
     catch(err){
         //err콘솔로 확인
         //
