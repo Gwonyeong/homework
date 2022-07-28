@@ -13,10 +13,13 @@ router.get('/comment/:post_id', async(req, res)=>{ //댓글 목록 조회
     
     const comments = await Comment.find({post_id : post_id})//
    
-    comments.sort((a,b) => {
+    if(comments){
+        comments.sort((a,b) => {
         
-        if(a["createAt"] > b["createAt"]) return a-b
-    })
+            if(a["createAt"] > b["createAt"]) return a-b
+        })
+    }
+    
     // populate
     // User.findOne({ name: 'zero' }).populate('bestFriend').exec((err, data) => {
     // console.log(data);
