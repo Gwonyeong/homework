@@ -13,7 +13,7 @@ router.get('/comment/:post_id', async(req, res)=>{ //댓글 목록 조회
     
     const comments = await Comment.find({post_id : post_id})//
    
-    if(comments){
+    if(comments.length != 0){
         comments.sort((a,b) => {
         
             if(a["createAt"] > b["createAt"]) return a-b
