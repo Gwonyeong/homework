@@ -13,6 +13,7 @@ router.get('/', async(req, res) => { //전체 게시글 목록 조회
     const content = await postDB.find();
     
     res.json({success: true, content : content.map(p => ({
+        _id : p._id,
         title : p.title,
         nickname: p.nickname,
         desc : p.desc,
