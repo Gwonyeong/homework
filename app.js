@@ -10,7 +10,7 @@ const signRouter = require("./routes/sign")
 
 
 const app = express()
-const port = 8001
+const port = 8000
 
 app.use(cookieParser())
 app.use(express.json()) // body로 전달받은 json 데이터를 사용할 수 있게 해줌.

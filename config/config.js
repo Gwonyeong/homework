@@ -1,4 +1,4 @@
-require('dotenv').config({path: "../.env.local"});
+require('dotenv').config();
 const env = process.env;
 
 const development = {
